@@ -3,6 +3,8 @@ package com.example.photoApp;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -48,14 +51,27 @@ public class MyActivity extends Activity {
                 makePhoto();
             }
         });
+
+
+        findViewById(R.id.url).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(MyActivity.this).load("http://goo.gl/h8qOq7").into(imageView);
+            }
+        });
+
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_CODE_TAKE_PHOTO && resultCode == RESULT_OK) {
             photoSelected(tempTakePhotoFile.getAbsolutePath());
         }
+
+
         if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK) {
             try {
                 Uri uriImage = data.getData();
@@ -73,6 +89,17 @@ public class MyActivity extends Activity {
 
     private void photoSelected(final String filePath) {
         Log.i("MyApp", "path:" + filePath);
+
+        Glide.with(MyActivity.this).load(filePath).into(imageView);
+
+
+//        File imgFile = new  File(filePath);
+//        if(imgFile.exists()){
+//            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//            imageView.setImageBitmap(myBitmap);
+//        }
+
+
     }
 
     public static File getOutputMediaFile() {
